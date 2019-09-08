@@ -1,4 +1,4 @@
-project_name: vault-token-helper
+project_name: statsd-rewrite-proxy
 env:
   - GO111MODULE=on
   - GOPROXY=https://proxy.golang.org
