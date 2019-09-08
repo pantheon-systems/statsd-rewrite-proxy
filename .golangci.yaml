@@ -1,0 +1,6 @@
+# TODO: workaround for: https://github.com/golangci/golangci-lint/issues/658
+# TODO: remove this when golangci-lint ships a new binary buiilt with go1.13 and it is updated in our go-build docker image
+issues:
+  exclude:
+    - "not declared by package utf8"
+    - "unicode/utf8/utf8.go"
