@@ -1,0 +1,7 @@
+Attic
+.DS_Store
+.vscode/
+statsd-rewrite-proxy
+dist/
+cover.out
+NOTES.md

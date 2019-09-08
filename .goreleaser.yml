@@ -1,0 +1,89 @@
+project_name: vault-token-helper
+env:
+  - GO111MODULE=on
+  - GOPROXY=https://proxy.golang.org
+builds:
+  - binary: statsd-rewrite-proxy
+    id: main
+    ldflags:
+      - -s -w -X main.version={{.Version}}+{{.ShortCommit}}
+    goos:
+      - linux
+      - darwin
+      - freebsd
+      - openbsd
+      - dragonfly
+      - netbsd
+    goarch:
+      - amd64
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^readme:"
+      - "^test:"
+      - Merge pull request
+      - Merge branch
+
+archives:
+  # binary-only releasess - all platforms
+  - id: binaries
+    builds: ["main"]
+    format: binary
+  # archive releases containg: binary, readme, and license. tarballs (macos, linux), zip (windows)
+  - id: archives
+    builds: ["main"]
+    format_overrides:
+      - goos: windows
+        format: zip
+
+# deb, rpm packages (linux)
+nfpms:
+  - id: "statsd-rewrite-proxy"
+    builds: ["main"]
+    vendor: "Pantheon Systems"
+    homepage: "https://github.com/pantheon-systems/statsd-rewrite-proxy"
+    description: "TODO"
+    maintainer: "TODO"
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    overrides:
+      rpm:
+        name_template: "{{ .ProjectName }}-{{ .Version }}-{{ .Arch }}"
+        replacements:
+          amd64: x86_64
+          386: i686
+          arm: armhfp
+          arm64: aarch64
+      deb:
+        name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+        replacements:
+          386: i386
+          arm: armel
+
+dockers:
+  - dockerfile: Dockerfile
+    binaries:
+      - statsd-rewrite-proxy
+    image_templates:
+      - "quay.io/getpantheon/statsd-rewrite-proxy:{{ .Tag }}" # v1.0.0
+      - "quay.io/getpantheon/statsd-rewrite-proxy:v{{ .Major }}" # v1
+      - "quay.io/getpantheon/statsd-rewrite-proxy:v{{ .Major }}.{{ .Minor }}" # v1
+
+  - dockerfile: Dockerfile.alpine
+    binaries:
+      - statsd-rewrite-proxy
+    image_templates:
+      - "quay.io/getpantheon/statsd-rewrite-proxy:{{ .Tag }}-alpine" # v1.0.0-alpine
+      - "quay.io/getpantheon/statsd-rewrite-proxy:v{{ .Major }}-alpine" # v1-alpine
+      - "quay.io/getpantheon/statsd-rewrite-proxy:v{{ .Major }}.{{ .Minor }}-alpine" # v1-alpine

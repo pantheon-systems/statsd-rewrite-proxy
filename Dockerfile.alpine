@@ -1,0 +1,8 @@
+FROM alpine
+
+# useful for dev and debugging
+# RUN apk add --no-cache tcpdump
+
+COPY statsd-rewrite-proxy /
+
+ENTRYPOINT ["/statsd-rewrite-proxy"]

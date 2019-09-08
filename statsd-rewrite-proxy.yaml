@@ -1,0 +1,8 @@
+debug: true
+listen: 127.0.0.1:8125
+target: localhost:8126
+workers: 4
+regexes:
+  - ["foo", "bar"]
+  - ["baz", "blah"]
+  - ['^vault\.', "vault.sandbox."]
